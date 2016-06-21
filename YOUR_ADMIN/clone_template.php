@@ -34,6 +34,7 @@ $action = 'choose_template';
 if (isset ($_POST['copy_template'])) {
     $template_source = $_POST['template_source'];
     $cloned_name = $_POST['cloned_name'];
+    $cloned_display_name = zen_clean_html ($_POST['cloned_display_name']);
     if (!zen_not_null ($cloned_name)) {
         $messageStack->add (MESSAGE_BLANK_CLONED_NAME, 'error');
     } elseif (in_array ($cloned_name, $template_name_list)) {
@@ -192,6 +193,23 @@ if ($action == 'copy_template') {
         }
         $layout_boxes->MoveNext ();
     }
+    
+    if (!file_exists (DIR_FS_CATALOG_TEMPLATES . $source_template . 'template_info.php')) {
+        $template_name = 'Missing.';
+        $template_version = '?.?';
+        $template_author = 'Unknown';
+        $template_description = 'Missing.';
+        $template_screenshot = '';
+    } else {
+        include (DIR_FS_CATALOG_TEMPLATES . $source_template . 'template_info.php');
+    }
+    $file_contents  = '<?php' . "\n";
+    $file_contents .= '$template_name = \'' . addslashes ($cloned_display_name) . '\';' . "\n";
+    $file_contents .= '$template_version = \'' . $template_version . '\';' . "\n";
+    $file_contents .= '$template_author = \'' . addslashes ($template_author) . '\';' . "\n";
+    $file_contents .= '$template_description = \'' . addslashes ($template_description) . sprintf (TEXT_TEMPLATE_CLONED, substr ($source_template, 0, -1), date (PHP_DATE_TIME_FORMAT)) . '\';' . "\n";
+    $file_contents .= '$template_screenshot = \'' . $template_screenshot . '\';' . "\n";
+    file_put_contents (DIR_FS_CATALOG_TEMPLATES . $target_template . DIRECTORY_SEPARATOR . 'template_info.php', $file_contents);
 } else {
     if (isset ($template_source)) {
         $current_template_dir = $template_source;
@@ -199,7 +217,7 @@ if ($action == 'copy_template') {
 ?> 
     <tr>    
         <td class="spacing"><?php echo zen_draw_form ('choose_template', FILENAME_CLONE_TEMPLATE, '', 'post'); ?>
-            <?php echo '<b>' . TEXT_TEMPLATE_SOURCE . '</b>' . zen_draw_pull_down_menu ('template_source', $template_list_dropdown, $current_template_dir) . '&nbsp;&nbsp;<b>' . TEXT_NEW_TEMPLATE_NAME . '</b>' . zen_draw_input_field ('cloned_name') . zen_draw_hidden_field ('copy_template', 'yes') . '&nbsp;&nbsp;' . zen_image_submit ('button_go.gif', CLONE_TEMPLATE_GO_ALT, 'onclick="return issueWarnings ();"'); ?></td>
+            <?php echo '<b>' . TEXT_TEMPLATE_SOURCE . '</b>' . zen_draw_pull_down_menu ('template_source', $template_list_dropdown, $current_template_dir) . '&nbsp;&nbsp;<b>' . TEXT_NEW_TEMPLATE_NAME . '</b>' . zen_draw_input_field ('cloned_name') . '&nbsp;&nbsp;<b>' . TEXT_NEW_TEMPLATE_DISPLAY_NAME . '</b>' . zen_draw_input_field ('cloned_display_name') . zen_draw_hidden_field ('copy_template', 'yes') . '&nbsp;&nbsp;' . zen_image_submit ('button_go.gif', CLONE_TEMPLATE_GO_ALT, 'onclick="return issueWarnings ();"'); ?></td>
         </form></td>
     </tr>
 <?php

@@ -61,28 +61,28 @@ th { background-color: #eee; }
 
 <body>
   <h1>Clone a Template <span class="smaller">for Zen Cart v1.5.0 (and later)</span></h1>
-  <h3>Version 1.0.0 by lat9</h3>
+  <h3>Version 1.1.0 by lat9</h3>
   <p>Current Support Thread at Zen Cart Forums: <a href="https://www.zen-cart.com/showthread.php?220458-Clone-a-Template-Support-Thread">https://www.zen-cart.com/showthread.php?220458-Clone-a-Template-Support-Thread</a></p>
 
   <div class="tab-container" id="outer-container">
     <ul class="etabs">
       <li class="tab"><a href="#overview">Overview</a></li>
-      <li class="tab"><a href="#installation">Installation</a></li>
+      <li class="tab"><a href="#installation">Installation and Updates</a></li>
       <li class="tab"><a href="#version">Change History</a></li>
     </ul>
     <div class="panel-container">
       <div id="overview">
         <h2>What it does</h2>
-        <p>With the release of Zen Cart 1.5.5a and its built-in responsive template, I found that creating &quot;clones&quot; of that template by hand were getting to be a pain!  Rather than continue with that pain, this plugin came into being!</p>
-        <p><em>Clone a Template</em> enables you to create a copy of any of your store's templates with a single button-click.  The processing copies all template-override files from a <b>source</b> template to a <b>target</b> and then copies that source-template's <b>Layout Boxes Controller</b> database settings to the new template.</p>
+        <p>With the release of Zen Cart 1.5.5a and its built-in responsive template, I found that creating &quot;clones&quot; of that template by hand were getting to be a pain!  Rather than continue with that pain, this plugin came into being!  Once you're copied the plugin's files to your store's file-system, you'll find a new admin-menu entry:  <strong>Tools-&gt;Clone a Template</strong></p>
+        <p><em>Clone a Template</em> enables you to create a copy of any of your store's templates with a single button-click.  The processing copies all template-override files from a <b>source</b> template to a <b>target</b>, copies that source-template's <b>Layout Boxes Controller</b> database settings to the new template and finally updates the target-template's <code class="no-pad">/includes/templates/target_template/template_info.php</code> to identify the source-template's folder-name and the date/time of the cloning operation.</p>
       </div>
       
       <div id="installation">
-        <p>This section identifies the procedure you'll use to install or remove the plugin for your Zen Cart.</p>
+        <p>This section identifies the procedure you'll use to install/update or remove the plugin for your Zen Cart.</p>
 
         <div class="tab-container" id="inner-container2">
           <ul class="etabs">
-            <li class="tab"><a href="#install">Installation</a></li>
+            <li class="tab"><a href="#install">Installation and Updates</a></li>
             <li class="tab"><a href="#remove">Uninstall</a></li>
           </ul>
           <div class="panel-container">
@@ -131,6 +131,9 @@ th { background-color: #eee; }
             
             <div id="changes">
               <ul>
+                <li>v1.1.0, 2016-06-21:<ul>
+                  <li>CHANGE: Update the target-template's &quot;template_info.php&quot; file to enable identification of the newly-cloned template.</li>
+                </ul></li>
                 <li>v1.0.0, 2016-06-16:<ul>
                   <li>Initial release.</li>
                 </ul></li>
