@@ -217,7 +217,7 @@ if ($action == 'copy_template') {
 ?> 
     <tr>    
         <td class="spacing"><?php echo zen_draw_form ('choose_template', FILENAME_CLONE_TEMPLATE, '', 'post'); ?>
-            <?php echo '<b>' . TEXT_TEMPLATE_SOURCE . '</b>' . zen_draw_pull_down_menu ('template_source', $template_list_dropdown, $current_template_dir) . '&nbsp;&nbsp;<b>' . TEXT_NEW_TEMPLATE_NAME . '</b>' . zen_draw_input_field ('cloned_name') . '&nbsp;&nbsp;<b>' . TEXT_NEW_TEMPLATE_DISPLAY_NAME . '</b>' . zen_draw_input_field ('cloned_display_name') . zen_draw_hidden_field ('copy_template', 'yes') . '&nbsp;&nbsp;' . zen_image_submit ('button_go.gif', CLONE_TEMPLATE_GO_ALT, 'onclick="return issueWarnings ();"'); ?></td>
+            <?php echo '<b>' . TEXT_TEMPLATE_SOURCE . '</b>' . zen_draw_pull_down_menu ('template_source', $template_list_dropdown, $current_template_dir) . '&nbsp;&nbsp;<b>' . TEXT_NEW_TEMPLATE_NAME . '</b>' . zen_draw_input_field ('cloned_name') . '&nbsp;&nbsp;<b>' . TEXT_NEW_TEMPLATE_DISPLAY_NAME . '</b>' . zen_draw_input_field ('cloned_display_name') . zen_draw_hidden_field ('copy_template', 'yes') . '&nbsp;&nbsp;' . zen_image_submit ('button_go.gif', CLONE_TEMPLATE_GO_ALT, 'onclick="return issueWarnings ();"'); ?>
         </form></td>
     </tr>
 <?php
