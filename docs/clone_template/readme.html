@@ -62,7 +62,8 @@ th { background-color: #eee; }
 
 <body>
   <h1>Clone a Template <span class="smaller">for Zen Cart v1.5.0 (and later)</span></h1>
-  <h3>Version 1.1.1 by lat9</h3>
+  <h3>Version 1.2.0 by lat9</h3>
+  <h3>Copyright (C) 2016-2017, Vinos de Frutas Tropicales</h3>
   <p>Current Support Thread at Zen Cart Forums: <a href="https://www.zen-cart.com/showthread.php?220458-Clone-a-Template-Support-Thread">https://www.zen-cart.com/showthread.php?220458-Clone-a-Template-Support-Thread</a></p>
 
   <div class="tab-container" id="outer-container">
@@ -76,6 +77,7 @@ th { background-color: #eee; }
         <h2>What it does</h2>
         <p>With the release of Zen Cart 1.5.5a and its built-in responsive template, I found that creating &quot;clones&quot; of that template by hand were getting to be a pain!  Rather than continue with that pain, this plugin came into being!  Once you're copied the plugin's files to your store's file-system, you'll find a new admin-menu entry:  <strong>Tools-&gt;Clone a Template</strong></p>
         <p><em>Clone a Template</em> enables you to create a copy of any of your store's templates with a single button-click.  The processing copies all template-override files from a <b>source</b> template to a <b>target</b>, copies that source-template's <b>Layout Boxes Controller</b> database settings to the new template and finally updates the target-template's <code class="no-pad">/includes/templates/target_template/template_info.php</code> to identify the source-template's folder-name and the date/time of the cloning operation.</p>
+        <p>v1.2.0 of <em>Clone a Template</em> introduces the capability to also <code class="no-pad">remove</code> a template's <em>template-override</em> files &hellip; for any add-on or cloned templates in your store.  This action deletes all files and associated directories and removes all <em>Layout Boxes Controller</em> settings from your database.</p>
       </div>
       
       <div id="installation">
@@ -132,8 +134,9 @@ th { background-color: #eee; }
             
             <div id="changes">
               <ul>
-                <li>v1.1.1, 2016-07-xx:<ul>
+                <li>v1.2.0, 2017-05-31:<ul>
                   <li>BUGFIX: Remove extraneous &lt;/td&gt;.</li>
+                  <li>CHANGE: Enable a cloned or add-on template's template-override files to be removed.</li>
                 </ul></li>
                 <li>v1.1.0, 2016-07-01:<ul>
                   <li>CHANGE: Update the target-template's &quot;template_info.php&quot; file to enable identification of the newly-cloned template.</li>
