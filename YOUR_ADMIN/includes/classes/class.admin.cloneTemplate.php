@@ -2,7 +2,7 @@
 // -----
 // Part of the "Clone Template" plugin for Zen Cart v1.5.0 or later
 //
-// Copyright (c) 2016-2017, Vinos de Frutas Tropicales (lat9)
+// Copyright (c) 2016-2019, Vinos de Frutas Tropicales (lat9)
 //
 class cloneTemplate extends base {
     public function __construct($source_template, $target_template = false)
@@ -27,7 +27,7 @@ class cloneTemplate extends base {
         $files = $this->getDirectoryFilesRecursive($source_folder);
         $this->logProgress(sprintf(LOG_FOLDER_FILES_FOUND, count($files), $source_folder), 'heading');
         foreach ($files as $source_file) {
-            $target_file = str_replace($this->source_template, $this->target_template, $source_file);
+            $target_file = $this->strReplaceLast($this->source_template, $this->target_template, $source_file);
             $target_directory = pathinfo($target_file, PATHINFO_DIRNAME);
             if (!is_dir($target_directory)) {
                 mkdir($target_directory, 0777, true);
@@ -37,6 +37,15 @@ class cloneTemplate extends base {
             $this->logProgress(sprintf(LOG_COPYING_FILE, $source_file, $target_file));
         }
         return $this->logs;
+    }
+    
+    protected function strReplaceLast($search, $replace, $subject)
+    {
+        $pos = strrpos($subject, $search);
+        if ($pos !== false) {
+            $subject = substr_replace($subject, $replace, $pos, strlen($search));
+        }
+        return $subject;
     }
     
     public function removeDirectoryFiles($source_folder)
