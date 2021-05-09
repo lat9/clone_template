@@ -71,13 +71,10 @@ if (isset($_POST['template_action'])) {
     ];
 }
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
+  <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
 <style type="text/css">
 <!--
 table, td { border-collapse: collapse; }
@@ -94,33 +91,19 @@ table, td { border-collapse: collapse; }
 .choose { border-top: 1px solid #ebebeb; }
 -->
 </style>
-<script type="text/javascript" src="includes/menu.js"></script>
-<script type="text/javascript" src="includes/general.js"></script>
-<script type="text/javascript">
-  <!--
-  function init()
-  {
-    cssjsmenu('navbar');
-    if (document.getElementById)
-    {
-      var kill = document.getElementById('hoverJS');
-      kill.disabled = true;
-    }
-  }
-  
+<script>
   function issueWarnings()
   {
       return confirm('<?php echo JS_CONFIRMATION_MESSAGE; ?>');
   }
-  
+
   function issueRemoveWarnings()
   {
       return confirm('<?php echo JS_CONFIRM_REMOVAL_MESSAGE; ?>');
   }
-  // -->
 </script>
 </head>
-<body onLoad="init();">
+<body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
