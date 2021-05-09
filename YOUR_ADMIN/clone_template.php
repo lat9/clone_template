@@ -247,7 +247,7 @@ if ($action === 'copy_template') {
     }
 ?>
     <tr>
-        <td class="full-width v-top choose"><?php echo zen_draw_form('choose_template', FILENAME_CLONE_TEMPLATE, '', 'post'); ?><table class="full-width spacing">
+        <td class="full-width v-top choose"><?php echo zen_draw_form('template_clone', FILENAME_CLONE_TEMPLATE, '', 'post'); ?><table class="full-width spacing">
             <tr>
                 <td class="main"><?php echo TEXT_INSTRUCTIONS; ?></td>
             </tr>
@@ -259,7 +259,7 @@ if ($action === 'copy_template') {
     </tr>
 
     <tr>
-        <td class="full-width v-top choose"><?php echo zen_draw_form('choose_template', FILENAME_CLONE_TEMPLATE, '', 'post'); ?><table class="full-width spacing">
+        <td class="full-width v-top choose"><?php echo zen_draw_form('template_remove', FILENAME_CLONE_TEMPLATE, '', 'post'); ?><table class="full-width spacing">
 <?php
     if (count($template_remove_dropdown) === 0) {
 ?>
