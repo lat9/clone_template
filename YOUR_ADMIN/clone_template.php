@@ -75,8 +75,7 @@ if (isset($_POST['template_action'])) {
 <html <?php echo HTML_PARAMS; ?>>
 <head>
   <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
-<style type="text/css">
-<!--
+<style>
 table, td { border-collapse: collapse; }
 .full-width { width: 100%; }
 .spacing, table.spacing td { padding: 0.5em; }
@@ -86,10 +85,7 @@ table, td { border-collapse: collapse; }
 .left { text-align: left; }
 .center { text-align: center; }
 .heading { font-weight: bold; background-color: #ebebeb; border: 1px solid #444; }
-#back-button { text-align: right; }
-#back-button a { padding: 0.5em; border: 1px solid #444; background-color: #afafaf; margin-bottom: 0.3em; display: inline-block; font-size: larger; }
 .choose { border-top: 1px solid #ebebeb; }
--->
 </style>
 <script>
   function issueWarnings()
@@ -128,7 +124,8 @@ if ($action === 'copy_template') {
     <tr>
         <td class="spacing"><table class="full-width spacing">
             <tr>
-                <td id="back-button"><a href="<?php echo zen_href_link(FILENAME_CLONE_TEMPLATE); ?>"><?php echo TC_TEXT_BACK; ?></a></td>
+                <td><a href="<?php echo zen_href_link(FILENAME_CLONE_TEMPLATE); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a>
+                </td>
             </tr>
 
             <tr>
@@ -207,7 +204,7 @@ if ($action === 'copy_template') {
     <tr>
         <td class="spacing"><table class="full-width spacing">
             <tr>
-                <td id="back-button"><a href="<?php echo zen_href_link(FILENAME_CLONE_TEMPLATE); ?>"><?php echo TC_TEXT_BACK; ?></a></td>
+                <td><a href="<?php echo zen_href_link(FILENAME_CLONE_TEMPLATE); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a></td>
             </tr>
 
             <tr>
@@ -253,7 +250,8 @@ if ($action === 'copy_template') {
             </tr>
 
             <tr>
-                <td><?php echo '<b>' . TEXT_TEMPLATE_SOURCE . '</b>' . zen_draw_pull_down_menu('template_source', $template_list_dropdown, $current_template_dir) . '&nbsp;&nbsp;<b>' . TEXT_NEW_TEMPLATE_NAME . '</b>' . zen_draw_input_field('cloned_name') . '&nbsp;&nbsp;<b>' . TEXT_NEW_TEMPLATE_DISPLAY_NAME . '</b>' . zen_draw_input_field('cloned_display_name') . zen_draw_hidden_field('template_action', 'clone') . '&nbsp;&nbsp;' . zen_image_submit('button_go.gif', CLONE_TEMPLATE_GO_ALT, 'onclick="return issueWarnings();"'); ?></td>
+                <td><?php echo '<b>' . TEXT_TEMPLATE_SOURCE . '</b>' . zen_draw_pull_down_menu('template_source', $template_list_dropdown, $current_template_dir) . '&nbsp;&nbsp;<b>' . TEXT_NEW_TEMPLATE_NAME . '</b>' . zen_draw_input_field('cloned_name') . '&nbsp;&nbsp;<b>' . TEXT_NEW_TEMPLATE_DISPLAY_NAME . '</b>' . zen_draw_input_field('cloned_display_name') . zen_draw_hidden_field('template_action', 'clone'); ?>
+                    <button type="submit" class="btn btn-primary" title="<?php echo CLONE_TEMPLATE_GO_ALT; ?>" onclick="return issueWarnings();"><i class="fa fa-copy" aria-hidden="true"></i> <?php echo IMAGE_COPY; ?></button></td>
             </tr>
         </table><?php echo '</form>'; ?></td>
     </tr>
@@ -274,7 +272,9 @@ if ($action === 'copy_template') {
             </tr>
 
             <tr>
-                <td><?php echo '<b>' . TEXT_TEMPLATE_REMOVE_SOURCE . '</b>' . zen_draw_pull_down_menu('template_source', $template_remove_dropdown, $current_template_dir) . zen_draw_hidden_field('template_action', 'remove') . '&nbsp;&nbsp;' . zen_image_submit('button_go.gif', CLONE_TEMPLATE_GO_REMOVE_ALT, 'onclick="return issueRemoveWarnings();"'); ?></td>
+                <td><?php echo '<b>' . TEXT_TEMPLATE_REMOVE_SOURCE . '</b>' . zen_draw_pull_down_menu('template_source', $template_remove_dropdown, $current_template_dir) . zen_draw_hidden_field('template_action', 'remove'); ?>
+                    <button type="submit" class="btn btn-danger" title="<?php echo CLONE_TEMPLATE_GO_REMOVE_ALT; ?>" onclick="return issueRemoveWarnings();"><i class="fa fa-trash" aria-hidden="true"></i><?php echo IMAGE_DELETE; ?></button>
+                </td>
             </tr>
 <?php
     }
