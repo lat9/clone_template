@@ -9,7 +9,7 @@ require ('includes/application_top.php');
 $languages = zen_get_languages ();
 $default_language_id = 1;
 foreach ($languages as $current_language) {
-    if ($current_language['code'] == DEFAULT_LANGUAGE) {
+    if ($current_language['code'] === DEFAULT_LANGUAGE) {
         $default_language_id = $current_language['id'];
         $default_language_dir = $current_language['directory'];
         break;
@@ -17,16 +17,16 @@ foreach ($languages as $current_language) {
 }
 
 $templates = $db->Execute ("SELECT DISTINCT layout_template FROM " . TABLE_LAYOUT_BOXES);
-$template_list_dropdown = array();
-$template_remove_dropdown = array();
-$template_name_list = array();
+$template_list_dropdown = [];
+$template_remove_dropdown = [];
+$template_name_list = [];
 while (!$templates->EOF) {
     $template_name = $templates->fields['layout_template'];
-    if (!($template_name == 'template_default' || $template_name == 'default_template_settings') && file_exists (DIR_FS_CATALOG_TEMPLATES . "$template_name/")) {    
-        $template_list_dropdown[] = array( 'id' => $template_name, 'text' => $template_name );
+    if (!($template_name === 'template_default' || $template_name === 'default_template_settings') && file_exists (DIR_FS_CATALOG_TEMPLATES . "$template_name/")) {
+        $template_list_dropdown[] = ['id' => $template_name, 'text' => $template_name];
         $template_name_list[] = $template_name;
-        if ($template_name != 'classic' && $template_name != 'responsive_classic') {
-            $template_remove_dropdown[] = array( 'id' => $template_name, 'text' => $template_name );
+        if ($template_name !== 'classic' && $template_name !== 'responsive_classic') {
+            $template_remove_dropdown[] = ['id' => $template_name, 'text' => $template_name];
         }
     }
     $templates->MoveNext ();
@@ -37,7 +37,7 @@ $current_template_dir = ($current_template->EOF) ? '' : $current_template->field
 $action = 'choose_template';
 if (isset($_POST['template_action'])) {
     $template_source = $_POST['template_source'];
-    if ($_POST['template_action'] == 'clone') {
+    if ($_POST['template_action'] === 'clone') {
         $cloned_name = $_POST['cloned_name'];
         $cloned_display_name = zen_clean_html($_POST['cloned_display_name']);
         if (!zen_not_null($cloned_name)) {
@@ -49,14 +49,14 @@ if (isset($_POST['template_action'])) {
         } else {
             $action = 'copy_template';
         }
-    } elseif ($_POST['template_action'] == 'remove') {
+    } elseif ($_POST['template_action'] === 'remove') {
         $action = 'remove_template';
     }
 
     // -----
     // Create the array that contains the file-system folders that are template-overrideable.
     //
-    $override_folders = array (
+    $override_folders = [
         DIR_FS_CATALOG . 'includes/index_filters/' => 'normal',
         DIR_FS_CATALOG_MODULES => 'normal',
         DIR_FS_CATALOG_MODULES . 'sideboxes/' => 'normal',
@@ -68,7 +68,7 @@ if (isset($_POST['template_action'])) {
         DIR_FS_CATALOG_LANGUAGES . '%s/modules/order_total/' => 'language',
         DIR_FS_CATALOG_LANGUAGES . '%s/modules/payment/' => 'language',
         DIR_FS_CATALOG_LANGUAGES . '%s/modules/shipping/' => 'language',
-    );
+    ];
 }
 ?>
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -136,7 +136,7 @@ table, td { border-collapse: collapse; }
         </table></td>
     </tr>
 <?php
-if ($action == 'copy_template') {
+if ($action === 'copy_template') {
     $source_template = $_POST['template_source'] . DIRECTORY_SEPARATOR;
     $target_template = $_POST['cloned_name'] . DIRECTORY_SEPARATOR;
     require (DIR_WS_CLASSES . 'class.admin.cloneTemplate.php');
@@ -157,7 +157,7 @@ if ($action == 'copy_template') {
             </tr>
 <?php
     foreach ($override_folders as $override_folder_name => $folder_type) {
-        if ($folder_type == 'language') {
+        if ($folder_type === 'language') {
             foreach ($languages as $current_language) {
                 $status = $template_cloner->copyDirectoryFiles(sprintf($override_folder_name, $current_language['directory']) . $source_template);
                 foreach ($status as $message => $class) {
@@ -211,10 +211,10 @@ if ($action == 'copy_template') {
     $file_contents .= '$template_description = \'' . addslashes($template_description) . sprintf(TEXT_TEMPLATE_CLONED, substr($source_template, 0, -1), date(PHP_DATE_TIME_FORMAT)) . '\';' . "\n";
     $file_contents .= '$template_screenshot = \'' . $template_screenshot . '\';' . "\n";
     file_put_contents(DIR_FS_CATALOG_TEMPLATES . $target_template . DIRECTORY_SEPARATOR . 'template_info.php', $file_contents);
-} elseif ($action == 'remove_template') {
+} elseif ($action === 'remove_template') {
     $source_template = $_POST['template_source'];
     $db->Execute(
-        "DELETE FROM " . TABLE_LAYOUT_BOXES . " 
+        "DELETE FROM " . TABLE_LAYOUT_BOXES . "
           WHERE layout_template = '$source_template'"
     );
     $source_template .= DIRECTORY_SEPARATOR;
@@ -236,7 +236,7 @@ if ($action == 'copy_template') {
             </tr>
 <?php
     foreach ($override_folders as $override_folder_name => $folder_type) {
-        if ($folder_type == 'language') {
+        if ($folder_type === 'language') {
             foreach ($languages as $current_language) {
                 $status = $template_cloner->removeDirectoryFiles(sprintf($override_folder_name, $current_language['directory']) . $source_template);
                 foreach ($status as $message => $class) {
@@ -278,7 +278,7 @@ if ($action == 'copy_template') {
     <tr>
         <td class="full-width v-top choose"><?php echo zen_draw_form('choose_template', FILENAME_CLONE_TEMPLATE, '', 'post'); ?><table class="full-width spacing">
 <?php
-    if (count($template_remove_dropdown) == 0) {
+    if (count($template_remove_dropdown) === 0) {
 ?>
             <tr>
                 <td class="main"><?php echo TEXT_NOTHING_TO_REMOVE; ?></td>
