@@ -52,7 +52,7 @@ if (isset($_POST['template_action'])) {
     } elseif ($_POST['template_action'] == 'remove') {
         $action = 'remove_template';
     }
-            
+
     // -----
     // Create the array that contains the file-system folders that are template-overrideable.
     //
@@ -147,11 +147,11 @@ if ($action == 'copy_template') {
             <tr>
                 <td id="back-button"><a href="<?php echo zen_href_link(FILENAME_CLONE_TEMPLATE); ?>"><?php echo TC_TEXT_BACK; ?></a></td>
             </tr>
-            
+
             <tr>
                 <td class="heading"><?php echo sprintf (MESSAGE_COPYING_FILES, $_POST['template_source'], $_POST['cloned_name']); ?></td>
             </tr>
-            
+
             <tr>
                 <td><?php echo sprintf (MESSAGE_FILE_LOG, $template_cloner->getLogFileName ()); ?></td>
             </tr>
@@ -185,7 +185,7 @@ if ($action == 'copy_template') {
         $sql_data_array = $layout_boxes->fields;
         $sql_data_array['layout_template'] = $target_template;
         unset ($sql_data_array['layout_id']);
-        
+
         $check = $db->Execute("SELECT * FROM " . TABLE_LAYOUT_BOXES . " WHERE layout_template = '$target_template' AND layout_box_name = '" . $layout_boxes->fields['layout_box_name'] . "' LIMIT 1");
         if ($check->EOF) {
             zen_db_perform(TABLE_LAYOUT_BOXES, $sql_data_array);
@@ -194,7 +194,7 @@ if ($action == 'copy_template') {
         }
         $layout_boxes->MoveNext();
     }
-    
+
     if (!file_exists(DIR_FS_CATALOG_TEMPLATES . $source_template . 'template_info.php')) {
         $template_name = 'Missing.';
         $template_version = '?.?';
@@ -226,11 +226,11 @@ if ($action == 'copy_template') {
             <tr>
                 <td id="back-button"><a href="<?php echo zen_href_link(FILENAME_CLONE_TEMPLATE); ?>"><?php echo TC_TEXT_BACK; ?></a></td>
             </tr>
-            
+
             <tr>
                 <td class="heading"><?php echo sprintf(MESSAGE_REMOVING_FILES, $_POST['template_source']); ?></td>
             </tr>
-            
+
             <tr>
                 <td><?php echo sprintf(MESSAGE_FILE_LOG, $template_cloner->getLogFileName()); ?></td>
             </tr>
@@ -262,8 +262,8 @@ if ($action == 'copy_template') {
     if (isset ($template_source)) {
         $current_template_dir = $template_source;
     }
-?> 
-    <tr>    
+?>
+    <tr>
         <td class="full-width v-top choose"><?php echo zen_draw_form('choose_template', FILENAME_CLONE_TEMPLATE, '', 'post'); ?><table class="full-width spacing">
             <tr>
                 <td class="main"><?php echo TEXT_INSTRUCTIONS; ?></td>
@@ -274,7 +274,7 @@ if ($action == 'copy_template') {
             </tr>
         </table></form></td>
     </tr>
-        
+
     <tr>
         <td class="full-width v-top choose"><?php echo zen_draw_form('choose_template', FILENAME_CLONE_TEMPLATE, '', 'post'); ?><table class="full-width spacing">
 <?php
@@ -289,7 +289,7 @@ if ($action == 'copy_template') {
             <tr>
                 <td class="main"><?php echo TEXT_INSTRUCTIONS_REMOVE; ?></td>
             </tr>
-            
+
             <tr>
                 <td><?php echo '<b>' . TEXT_TEMPLATE_REMOVE_SOURCE . '</b>' . zen_draw_pull_down_menu('template_source', $template_remove_dropdown, $current_template_dir) . zen_draw_hidden_field('template_action', 'remove') . '&nbsp;&nbsp;' . zen_image_submit('button_go.gif', CLONE_TEMPLATE_GO_REMOVE_ALT, 'onclick="return issueRemoveWarnings();"'); ?></td>
             </tr>
@@ -300,7 +300,7 @@ if ($action == 'copy_template') {
     </tr>
 <?php
 }
-?>           
+?>
 </table>
 <!-- body_eof //-->
 
