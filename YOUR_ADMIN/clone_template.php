@@ -9,7 +9,7 @@ require ('includes/application_top.php');
 $languages = zen_get_languages ();
 $default_language_id = 1;
 foreach ($languages as $current_language) {
-    if ($current_language['code'] == DEFAULT_LANGUAGE) {
+    if ($current_language['code'] === DEFAULT_LANGUAGE) {
         $default_language_id = $current_language['id'];
         $default_language_dir = $current_language['directory'];
         break;
@@ -17,16 +17,16 @@ foreach ($languages as $current_language) {
 }
 
 $templates = $db->Execute ("SELECT DISTINCT layout_template FROM " . TABLE_LAYOUT_BOXES);
-$template_list_dropdown = array();
-$template_remove_dropdown = array();
-$template_name_list = array();
+$template_list_dropdown = [];
+$template_remove_dropdown = [];
+$template_name_list = [];
 while (!$templates->EOF) {
     $template_name = $templates->fields['layout_template'];
-    if (!($template_name == 'template_default' || $template_name == 'default_template_settings') && file_exists (DIR_FS_CATALOG_TEMPLATES . "$template_name/")) {    
-        $template_list_dropdown[] = array( 'id' => $template_name, 'text' => $template_name );
+    if (!($template_name === 'template_default' || $template_name === 'default_template_settings') && file_exists (DIR_FS_CATALOG_TEMPLATES . "$template_name/")) {
+        $template_list_dropdown[] = ['id' => $template_name, 'text' => $template_name];
         $template_name_list[] = $template_name;
-        if ($template_name != 'classic' && $template_name != 'responsive_classic') {
-            $template_remove_dropdown[] = array( 'id' => $template_name, 'text' => $template_name );
+        if ($template_name !== 'classic' && $template_name !== 'responsive_classic') {
+            $template_remove_dropdown[] = ['id' => $template_name, 'text' => $template_name];
         }
     }
     $templates->MoveNext ();
@@ -37,26 +37,33 @@ $current_template_dir = ($current_template->EOF) ? '' : $current_template->field
 $action = 'choose_template';
 if (isset($_POST['template_action'])) {
     $template_source = $_POST['template_source'];
-    if ($_POST['template_action'] == 'clone') {
+    if ($_POST['template_action'] === 'clone') {
         $cloned_name = $_POST['cloned_name'];
         $cloned_display_name = zen_clean_html($_POST['cloned_display_name']);
-        if (!zen_not_null($cloned_name)) {
-            $messageStack->add(MESSAGE_BLANK_CLONED_NAME, 'error');
-        } elseif (in_array($cloned_name, $template_name_list)) {
-            $messageStack->add(MESSAGE_DUPLICATE_CLONED_NAME, 'error');
+        $errors_present = $messageStack->size;
+
+        if (empty($cloned_name)) {
+            $messageStack->add(ERROR_TEMPLATE_TARGET_BLANK, 'error');
         } elseif (!preg_match('~^[a-zA-Z0-9_]+$~', $cloned_name)) {
-            $messageStack->add(MESSAGE_INVALID_CHARS_CLONED_NAME, 'error');
-        } else {
+            $messageStack->add(ERROR_TEMPLATE_TARGET_INVALID_CHARS, 'error');
+        }
+
+        if (empty($cloned_display_name)) {
+            $messageStack->add(ERROR_TEMPLATE_TARGET_NAME_BLANK, 'error');
+        } elseif (in_array($cloned_display_name, $template_name_list, true)) {
+            $messageStack->add(ERROR_TEMPLATE_TARGET_NAME_DUPLICATE, 'error');
+        }
+        if ($messageStack->size === $errors_present) {
             $action = 'copy_template';
         }
-    } elseif ($_POST['template_action'] == 'remove') {
+    } elseif ($_POST['template_action'] === 'remove') {
         $action = 'remove_template';
     }
-            
+
     // -----
     // Create the array that contains the file-system folders that are template-overrideable.
     //
-    $override_folders = array (
+    $override_folders = [
         DIR_FS_CATALOG . 'includes/index_filters/' => 'normal',
         DIR_FS_CATALOG_MODULES => 'normal',
         DIR_FS_CATALOG_MODULES . 'sideboxes/' => 'normal',
@@ -68,96 +75,62 @@ if (isset($_POST['template_action'])) {
         DIR_FS_CATALOG_LANGUAGES . '%s/modules/order_total/' => 'language',
         DIR_FS_CATALOG_LANGUAGES . '%s/modules/payment/' => 'language',
         DIR_FS_CATALOG_LANGUAGES . '%s/modules/shipping/' => 'language',
-    );
+    ];
 }
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<style type="text/css">
-<!--
-table, td { border-collapse: collapse; }
-.full-width { width: 100%; }
-.spacing, table.spacing td { padding: 0.5em; }
-.no-spacing { padding: 0; }
-.v-top { vertical-align: top; }
-.right { text-align: right; }
-.left { text-align: left; }
-.center { text-align: center; }
+  <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
+<style>
+table, td { border-collapse: collapse; width: 100%; padding: 0.5em;}
 .heading { font-weight: bold; background-color: #ebebeb; border: 1px solid #444; }
-#back-button { text-align: right; }
-#back-button a { padding: 0.5em; border: 1px solid #444; background-color: #afafaf; margin-bottom: 0.3em; display: inline-block; font-size: larger; }
-.choose { border-top: 1px solid #ebebeb; }
--->
 </style>
-<script type="text/javascript" src="includes/menu.js"></script>
-<script type="text/javascript" src="includes/general.js"></script>
-<script type="text/javascript">
-  <!--
-  function init()
-  {
-    cssjsmenu('navbar');
-    if (document.getElementById)
-    {
-      var kill = document.getElementById('hoverJS');
-      kill.disabled = true;
-    }
-  }
-  
+<script>
   function issueWarnings()
   {
       return confirm('<?php echo JS_CONFIRMATION_MESSAGE; ?>');
   }
-  
+
   function issueRemoveWarnings()
   {
       return confirm('<?php echo JS_CONFIRM_REMOVAL_MESSAGE; ?>');
   }
-  // -->
 </script>
 </head>
-<body onLoad="init();">
+<body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
 
 <!-- body //-->
-<table class="full-width spacing">
-    <tr>
-        <td class="full-width v-top"><table class="full-width spacing">
-            <tr>
-                <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-                <td class="pageHeading right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
-            </tr>
-        </table></td>
-    </tr>
+<div class="container-fluid">
+    <!-- body_text //-->
+    <div class="row">
+        <h1><?php echo HEADING_TITLE; ?></h1>
+        <?php echo TEXT_DESCRIPTION; ?>
+    </div>
+    <hr>
+<div class="row">
 <?php
-if ($action == 'copy_template') {
+if ($action === 'copy_template') {
     $source_template = $_POST['template_source'] . DIRECTORY_SEPARATOR;
     $target_template = $_POST['cloned_name'] . DIRECTORY_SEPARATOR;
     require (DIR_WS_CLASSES . 'class.admin.cloneTemplate.php');
     $template_cloner = new cloneTemplate($source_template, $target_template);
 ?>
-    <tr>
-        <td class="spacing"><table class="full-width spacing">
-            <tr>
-                <td id="back-button"><a href="<?php echo zen_href_link(FILENAME_CLONE_TEMPLATE); ?>"><?php echo TC_TEXT_BACK; ?></a></td>
-            </tr>
-            
+    <div class="row text-right"><a href="<?php echo zen_href_link(FILENAME_CLONE_TEMPLATE); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a></div>
+    <hr>
+    <table>
             <tr>
                 <td class="heading"><?php echo sprintf (MESSAGE_COPYING_FILES, $_POST['template_source'], $_POST['cloned_name']); ?></td>
             </tr>
-            
             <tr>
                 <td><?php echo sprintf (MESSAGE_FILE_LOG, $template_cloner->getLogFileName ()); ?></td>
             </tr>
 <?php
     foreach ($override_folders as $override_folder_name => $folder_type) {
-        if ($folder_type == 'language') {
+        if ($folder_type === 'language') {
             foreach ($languages as $current_language) {
                 $status = $template_cloner->copyDirectoryFiles(sprintf($override_folder_name, $current_language['directory']) . $source_template);
                 foreach ($status as $message => $class) {
@@ -176,8 +149,8 @@ if ($action == 'copy_template') {
         }
     }
 ?>
-        </table></td>
-    </tr>
+        </table>
+    <div class="row text-right"><a href="<?php echo zen_href_link(FILENAME_CLONE_TEMPLATE); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a></div>
 <?php
     $layout_boxes = $db->Execute("SELECT * FROM " . TABLE_LAYOUT_BOXES . " WHERE layout_template = '" . rtrim ($source_template, DIRECTORY_SEPARATOR) . "'");
     $target_template = rtrim($target_template, DIRECTORY_SEPARATOR);
@@ -185,7 +158,7 @@ if ($action == 'copy_template') {
         $sql_data_array = $layout_boxes->fields;
         $sql_data_array['layout_template'] = $target_template;
         unset ($sql_data_array['layout_id']);
-        
+
         $check = $db->Execute("SELECT * FROM " . TABLE_LAYOUT_BOXES . " WHERE layout_template = '$target_template' AND layout_box_name = '" . $layout_boxes->fields['layout_box_name'] . "' LIMIT 1");
         if ($check->EOF) {
             zen_db_perform(TABLE_LAYOUT_BOXES, $sql_data_array);
@@ -194,7 +167,7 @@ if ($action == 'copy_template') {
         }
         $layout_boxes->MoveNext();
     }
-    
+
     if (!file_exists(DIR_FS_CATALOG_TEMPLATES . $source_template . 'template_info.php')) {
         $template_name = 'Missing.';
         $template_version = '?.?';
@@ -211,32 +184,29 @@ if ($action == 'copy_template') {
     $file_contents .= '$template_description = \'' . addslashes($template_description) . sprintf(TEXT_TEMPLATE_CLONED, substr($source_template, 0, -1), date(PHP_DATE_TIME_FORMAT)) . '\';' . "\n";
     $file_contents .= '$template_screenshot = \'' . $template_screenshot . '\';' . "\n";
     file_put_contents(DIR_FS_CATALOG_TEMPLATES . $target_template . DIRECTORY_SEPARATOR . 'template_info.php', $file_contents);
-} elseif ($action == 'remove_template') {
+} elseif ($action === 'remove_template') {
     $source_template = $_POST['template_source'];
     $db->Execute(
-        "DELETE FROM " . TABLE_LAYOUT_BOXES . " 
+        "DELETE FROM " . TABLE_LAYOUT_BOXES . "
           WHERE layout_template = '$source_template'"
     );
     $source_template .= DIRECTORY_SEPARATOR;
     require (DIR_WS_CLASSES . 'class.admin.cloneTemplate.php');
     $template_cloner = new cloneTemplate($source_template);
 ?>
-    <tr>
-        <td class="spacing"><table class="full-width spacing">
-            <tr>
-                <td id="back-button"><a href="<?php echo zen_href_link(FILENAME_CLONE_TEMPLATE); ?>"><?php echo TC_TEXT_BACK; ?></a></td>
-            </tr>
-            
+            <div class="row">
+                <div class="row text-right"><a href="<?php echo zen_href_link(FILENAME_CLONE_TEMPLATE); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a></div>
+    <hr>
+                <table>
             <tr>
                 <td class="heading"><?php echo sprintf(MESSAGE_REMOVING_FILES, $_POST['template_source']); ?></td>
             </tr>
-            
             <tr>
                 <td><?php echo sprintf(MESSAGE_FILE_LOG, $template_cloner->getLogFileName()); ?></td>
             </tr>
 <?php
     foreach ($override_folders as $override_folder_name => $folder_type) {
-        if ($folder_type == 'language') {
+        if ($folder_type === 'language') {
             foreach ($languages as $current_language) {
                 $status = $template_cloner->removeDirectoryFiles(sprintf($override_folder_name, $current_language['directory']) . $source_template);
                 foreach ($status as $message => $class) {
@@ -255,59 +225,52 @@ if ($action == 'copy_template') {
         }
     }
 ?>
-        </table></td>
-    </tr>
+        </table>
+                <div class="row text-right"><a href="<?php echo zen_href_link(FILENAME_CLONE_TEMPLATE); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a></div>
 <?php
 } else {
     if (isset ($template_source)) {
         $current_template_dir = $template_source;
     }
-?> 
-    <tr>    
-        <td class="full-width v-top choose"><?php echo zen_draw_form('choose_template', FILENAME_CLONE_TEMPLATE, '', 'post'); ?><table class="full-width spacing">
-            <tr>
-                <td class="main"><?php echo TEXT_INSTRUCTIONS; ?></td>
-            </tr>
-
-            <tr>
-                <td><?php echo '<b>' . TEXT_TEMPLATE_SOURCE . '</b>' . zen_draw_pull_down_menu('template_source', $template_list_dropdown, $current_template_dir) . '&nbsp;&nbsp;<b>' . TEXT_NEW_TEMPLATE_NAME . '</b>' . zen_draw_input_field('cloned_name') . '&nbsp;&nbsp;<b>' . TEXT_NEW_TEMPLATE_DISPLAY_NAME . '</b>' . zen_draw_input_field('cloned_display_name') . zen_draw_hidden_field('template_action', 'clone') . '&nbsp;&nbsp;' . zen_image_submit('button_go.gif', CLONE_TEMPLATE_GO_ALT, 'onclick="return issueWarnings();"'); ?></td>
-            </tr>
-        </table></form></td>
-    </tr>
-        
-    <tr>
-        <td class="full-width v-top choose"><?php echo zen_draw_form('choose_template', FILENAME_CLONE_TEMPLATE, '', 'post'); ?><table class="full-width spacing">
-<?php
-    if (count($template_remove_dropdown) == 0) {
 ?>
-            <tr>
-                <td class="main"><?php echo TEXT_NOTHING_TO_REMOVE; ?></td>
-            </tr>
+    <div class="row">
+        <?php echo zen_draw_form('template_clone', FILENAME_CLONE_TEMPLATE, '', 'post');
+        echo TEXT_INSTRUCTIONS_CLONE; ?>
+        <div class="form-group">
+            <div class="col-md-4"><label><?php echo TEXT_TEMPLATE_SOURCE; ?></label> <?php echo zen_draw_pull_down_menu('template_source', $template_list_dropdown, $current_template_dir); ?></div>
+            <div class="col-md-4"><label><?php echo TEXT_TEMPLATE_TARGET; ?></label> <?php echo zen_draw_input_field('cloned_name'); ?></div>
+            <div class="col-md-4"><label><?php echo TEXT_TEMPLATE_TARGET_NAME; ?></label> <?php echo zen_draw_input_field('cloned_display_name') . zen_draw_hidden_field('template_action', 'clone'); ?></div>
+            <div class="text-right"><button type="submit" class="btn btn-primary" title="<?php echo CLONE_TEMPLATE_GO_ALT; ?>" onclick="return issueWarnings();"><i class="fa fa-copy" aria-hidden="true"></i> <?php echo IMAGE_COPY; ?></button></div>
+        </div>
+        <?php echo '</form>'; ?>
+    </div>
+<hr>
+    <div class="row">
 <?php
+    if (count($template_remove_dropdown) === 0) {
+echo TEXT_NOTHING_TO_REMOVE;
     } else {
 ?>
-            <tr>
-                <td class="main"><?php echo TEXT_INSTRUCTIONS_REMOVE; ?></td>
-            </tr>
-            
-            <tr>
-                <td><?php echo '<b>' . TEXT_TEMPLATE_REMOVE_SOURCE . '</b>' . zen_draw_pull_down_menu('template_source', $template_remove_dropdown, $current_template_dir) . zen_draw_hidden_field('template_action', 'remove') . '&nbsp;&nbsp;' . zen_image_submit('button_go.gif', CLONE_TEMPLATE_GO_REMOVE_ALT, 'onclick="return issueRemoveWarnings();"'); ?></td>
-            </tr>
 <?php
-    }
-?>
-        </table></form></td>
-    </tr>
+echo TEXT_INSTRUCTIONS_REMOVE;
+echo zen_draw_form('template_remove', FILENAME_CLONE_TEMPLATE, '', 'post'); ?>
+<div class="form-group">
+        <div class="col-md-4"><label><?php echo TEXT_TEMPLATE_REMOVE_SOURCE; ?></label> <?php echo zen_draw_pull_down_menu('template_source', $template_remove_dropdown, $current_template_dir) . zen_draw_hidden_field('template_action', 'remove'); ?></div>
+        <div class="col-md-8"><button type="submit" class="btn btn-danger" title="<?php echo CLONE_TEMPLATE_GO_REMOVE_ALT; ?>" onclick="return issueRemoveWarnings();"><i class="fa fa-trash" aria-hidden="true"></i><?php echo IMAGE_DELETE; ?></button></div>
+    </div>
+<?php echo '</form>';
+    } ?>
+</div>
 <?php
 }
-?>           
-</table>
-<!-- body_eof //-->
-
+?>
+</div>
+    <!-- body_text_eof //-->
+</div>
+    <!-- body_eof //-->
 <!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
-<br />
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
