@@ -6,7 +6,14 @@
 //
 // Copyright (c) 2016-2023, Vinos de Frutas Tropicales (lat9)
 //
+define('CLONE_TEMPLATE_VERSION', 'v2.0.0');
+
 require 'includes/application_top.php';
+
+$psr4Autoloader->setClassFile(
+    'Zencart\Plugins\Admin\CloneTemplate\cloneTemplate',
+    $filePathPluginAdmin['CloneTemplate'] . 'class.admin.cloneTemplate.php'
+);
 
 $languages = zen_get_languages();
 $default_language_id = 1;
@@ -115,18 +122,21 @@ function issueRemoveWarnings()
 <div class="container-fluid">
     <!-- body_text //-->
     <div class="row">
-        <h1><?php echo HEADING_TITLE; ?></h1>
+        <h1><?php echo sprintf(HEADING_TITLE, CLONE_TEMPLATE_VERSION); ?></h1>
         <?php echo TEXT_DESCRIPTION; ?>
     </div>
 
     <hr>
     <div class="row">
 <?php
+$zc_plugins_path = '';
+//$zc_plugins_path = dirname(__FILE__) . DIRECTORY_SEPARATOR;
 if ($action === 'copy_template') {
     $source_template = $_POST['template_source'] . DIRECTORY_SEPARATOR;
     $target_template = $_POST['cloned_name'] . DIRECTORY_SEPARATOR;
-    require DIR_WS_CLASSES . 'class.admin.cloneTemplate.php';
-    $template_cloner = new cloneTemplate($source_template, $target_template);
+
+//    require $zc_plugins_path . DIR_WS_CLASSES . 'class.admin.cloneTemplate.php';
+    $template_cloner = new Zencart\Plugins\Admin\CloneTemplate\cloneTemplate($source_template, $target_template);
 ?>
         <div class="row text-right">
             <a href="<?php echo zen_href_link(FILENAME_CLONE_TEMPLATE); ?>" class="btn btn-default" role="button">
@@ -137,10 +147,10 @@ if ($action === 'copy_template') {
         <hr>
         <table>
             <tr>
-                <td class="heading"><?php echo sprintf (MESSAGE_COPYING_FILES, $_POST['template_source'], $_POST['cloned_name']); ?></td>
+                <td class="heading"><?php echo sprintf(MESSAGE_COPYING_FILES, $_POST['template_source'], $_POST['cloned_name']); ?></td>
             </tr>
             <tr>
-                <td><?php echo sprintf (MESSAGE_FILE_LOG, $template_cloner->getLogFileName ()); ?></td>
+                <td><?php echo sprintf(MESSAGE_FILE_LOG, $template_cloner->getLogFileName ()); ?></td>
             </tr>
 <?php
     foreach ($override_folders as $override_folder_name => $folder_type) {
@@ -180,13 +190,13 @@ if ($action === 'copy_template') {
     foreach ($layout_boxes as $next_box) {
         $sql_data_array = $next_box;
         $sql_data_array['layout_template'] = $target_template;
-        unset ($sql_data_array['layout_id']);
+        unset($sql_data_array['layout_id']);
 
         $check = $db->Execute("SELECT * FROM " . TABLE_LAYOUT_BOXES . " WHERE layout_template = '$target_template' AND layout_box_name = '" . $next_box['layout_box_name'] . "' LIMIT 1");
         if ($check->EOF) {
             zen_db_perform(TABLE_LAYOUT_BOXES, $sql_data_array);
         } else {
-            zen_db_perform(TABLE_LAYOUT_BOXES, $sql_data_array, 'update', 'layout_id=' . $check->fields['layout_id']);
+            zen_db_perform(TABLE_LAYOUT_BOXES, $sql_data_array, 'update', 'layout_id=' . $next_box['layout_id']);
         }
     }
 
@@ -197,7 +207,7 @@ if ($action === 'copy_template') {
         $template_description = 'Missing.';
         $template_screenshot = '';
     } else {
-        include DIR_FS_CATALOG_TEMPLATES . $source_template . 'template_info.php';
+        require DIR_FS_CATALOG_TEMPLATES . $source_template . 'template_info.php';
     }
     $file_contents  = '<?php' . "\n";
     $file_contents .= '$template_name = \'' . addslashes($cloned_display_name) . '\';' . "\n";
@@ -213,8 +223,8 @@ if ($action === 'copy_template') {
           WHERE layout_template = '$source_template'"
     );
     $source_template .= DIRECTORY_SEPARATOR;
-    require (DIR_WS_CLASSES . 'class.admin.cloneTemplate.php');
-    $template_cloner = new cloneTemplate($source_template);
+//    require $zc_plugins_path . DIR_WS_CLASSES . 'class.admin.cloneTemplate.php';
+    $template_cloner = new Zencart\Plugins\Admin\CloneTemplate\cloneTemplate($source_template);
 ?>
         <div class="row">
             <div class="row text-right">
@@ -271,11 +281,11 @@ if ($action === 'copy_template') {
                 <?php echo zen_draw_form('template_clone', FILENAME_CLONE_TEMPLATE, '', 'post');
                 echo TEXT_INSTRUCTIONS_CLONE; ?>
                 <div class="form-group">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label><?php echo TEXT_TEMPLATE_SOURCE; ?></label>
                         <?php echo zen_draw_pull_down_menu('template_source', $template_list_dropdown, $current_template_dir); ?>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label><?php echo TEXT_TEMPLATE_TARGET; ?></label>
                         <?php echo zen_draw_input_field('cloned_name'); ?>
                     </div>
@@ -283,7 +293,7 @@ if ($action === 'copy_template') {
                         <label><?php echo TEXT_TEMPLATE_TARGET_NAME; ?></label>
                         <?php echo zen_draw_input_field('cloned_display_name') . zen_draw_hidden_field('template_action', 'clone'); ?>
                     </div>
-                    <div class="text-right">
+                    <div class="text-right col-md-2">
                         <button type="submit" class="btn btn-primary" title="<?php echo CLONE_TEMPLATE_GO_ALT; ?>" onclick="return issueWarnings();">
                             <i class="fa fa-copy" aria-hidden="true"></i>
                             <?php echo IMAGE_COPY; ?>

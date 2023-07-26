@@ -7,7 +7,7 @@
 // Copyright (c) 2016-2023, Vinos de Frutas Tropicales (lat9)
 //
 $define = [
-    'HEADING_TITLE' => 'Clone a Template <span style="font-size: smaller;">(' . CLONE_TEMPLATE_VERSION . ')</span>',
+    'HEADING_TITLE' => 'Clone a Template <span style="font-size: smaller;">(%s)</span>',
     'TEXT_DESCRIPTION' => '<p>This tool enables you to &quot;clone&quot; or remove an <em>existing</em> template.</p>',
 
     'TEXT_INSTRUCTIONS_CLONE' => '<p>When a template is &quot;cloned&quot;, all <em>template-override</em> files and <b>Layout Boxes Controller</b> settings for the source template are copied to the new template.</p><p>The name you enter in the <b>New Template Display Name</b> field will identify the new template in the <strong>Tools-&gt;Template Selection</strong> page.</p>',
