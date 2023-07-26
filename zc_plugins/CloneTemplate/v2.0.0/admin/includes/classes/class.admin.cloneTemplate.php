@@ -1,29 +1,38 @@
 <?php
 // -----
-// Part of the "Clone Template" plugin for Zen Cart v1.5.0 or later
+// Part of the "Clone Template" encapsulated plugin for Zen Cart v1.5.8 or later.
 //
-// Copyright (c) 2016-2019, Vinos de Frutas Tropicales (lat9)
+// Last updated: v2.0.0
 //
-class cloneTemplate extends base {
+// Copyright (c) 2016-2023, Vinos de Frutas Tropicales (lat9)
+//
+class cloneTemplate extends base
+{
+    protected
+        $source_template,
+        $target_templae,
+        $logfile_name,
+        $logs;
+
     public function __construct($source_template, $target_template = false)
     {
         $this->source_template = $source_template;
         $this->target_template = $target_template;
         if ($target_template === false) {
-            $this->logfile_name = DIR_FS_LOGS . '/remove_template_' . rtrim($source_template, DIRECTORY_SEPARATOR) . '_' . date ('Ymd_His') . '.log';
+            $this->logfile_name = DIR_FS_LOGS . '/remove_template_' . rtrim($source_template, DIRECTORY_SEPARATOR) . '_' . date('Ymd_His') . '.log';
         } else {
             $this->logfile_name = DIR_FS_LOGS . '/clone_template_' . rtrim($source_template, DIRECTORY_SEPARATOR) . '_to_' . rtrim($target_template, DIRECTORY_SEPARATOR) . '_' . date ('Ymd_His') . '.log';
         }
     }
-    
+
     public function getLogFileName()
     {
         return $this->logfile_name;
     }
-    
+
     public function copyDirectoryFiles($source_folder)
     {
-        $this->logs = array ();
+        $this->logs = [];
         $files = $this->getDirectoryFilesRecursive($source_folder);
         $this->logProgress(sprintf(LOG_FOLDER_FILES_FOUND, count($files), $source_folder), 'heading');
         foreach ($files as $source_file) {
@@ -38,7 +47,7 @@ class cloneTemplate extends base {
         }
         return $this->logs;
     }
-    
+
     protected function strReplaceLast($search, $replace, $subject)
     {
         $pos = strrpos($subject, $search);
@@ -47,10 +56,10 @@ class cloneTemplate extends base {
         }
         return $subject;
     }
-    
+
     public function removeDirectoryFiles($source_folder)
     {
-        $this->logs = array ();
+        $this->logs = [];
         $files = $this->getDirectoryFilesRecursive($source_folder);
         $this->logProgress(sprintf(LOG_FOLDER_REMOVE_FILES_FOUND, count($files), $source_folder), 'heading');
         foreach ($files as $source_file) {
@@ -71,12 +80,12 @@ class cloneTemplate extends base {
         return $this->logs;
     }
 
-    protected function getDirectoryFilesRecursive ($file_path, $files_array = array ())
+    protected function getDirectoryFilesRecursive ($file_path, $files_array = [])
     {
-        $files = glob($file_path . '{,.}*', GLOB_BRACE+GLOB_MARK);
+        $files = glob($file_path . '{,.}*', GLOB_BRACE + GLOB_MARK);
         foreach ($files as $current_file) {
             if (substr($current_file, -1) == DIRECTORY_SEPARATOR) {
-                if (!(substr($current_file, -2, 1) == '.' || substr($current_file, -3, 2) == '..')) {
+                if (!(substr($current_file, -2, 1) === '.' || substr($current_file, -3, 2) === '..')) {
                     $files_array = $this->getDirectoryFilesRecursive($current_file, $files_array);
                     if ($this->target_template === false) {
                         $files_array[] = $current_file;
@@ -84,11 +93,11 @@ class cloneTemplate extends base {
                 }
             } else {
                 $files_array[] = $current_file;
-            }       
+            }
         }
         return $files_array;
     }
-    
+
     protected function logProgress($message, $class = 'line-item')
     {
         $message .= "\n";
