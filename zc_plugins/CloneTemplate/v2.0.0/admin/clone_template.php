@@ -207,8 +207,10 @@ if ($action === 'copy_template') {
         $template_author = 'Unknown';
         $template_description = 'Missing.';
         $template_screenshot = '';
+        $template_info_contents = '';
     } else {
         require DIR_FS_CATALOG_TEMPLATES . $source_template . 'template_info.php';
+        $template_info_contents = file_get_contents(DIR_FS_CATALOG_TEMPLATES . $source_template . 'template_info.php');
     }
     $file_contents  = '<?php' . "\n";
     $file_contents .= '$template_name = \'' . addslashes($cloned_display_name) . '\';' . "\n";
@@ -216,6 +218,22 @@ if ($action === 'copy_template') {
     $file_contents .= '$template_author = \'' . addslashes($template_author) . '\';' . "\n";
     $file_contents .= '$template_description = \'' . addslashes($template_description) . sprintf(TEXT_TEMPLATE_CLONED, substr($source_template, 0, -1), date(PHP_DATE_TIME_FORMAT)) . '\';' . "\n";
     $file_contents .= '$template_screenshot = \'' . $template_screenshot . '\';' . "\n";
+
+    // -----
+    // Check for any template overrides and include them in the cloned template's
+    // file as well.
+    //
+    // NOTE: Presumes that the $template_screenshot variable is the last of the 'common'
+    // variables!
+    //
+    if ($template_info_contents !== '') {
+        $screenshot_pos = strpos($template_info_contents, '$template_screenshot');
+        if ($screenshot_pos !== false) {
+            $screenshot_pos = strpos($template_info_contents, ';', $screenshot_pos);
+            $file_contents .= substr($template_info_contents, $screenshot_pos + 1);
+        }
+    }
+
     file_put_contents(DIR_FS_CATALOG_TEMPLATES . $target_template . DIRECTORY_SEPARATOR . 'template_info.php', $file_contents);
 } elseif ($action === 'remove_template') {
     $source_template = $_POST['template_source'];
