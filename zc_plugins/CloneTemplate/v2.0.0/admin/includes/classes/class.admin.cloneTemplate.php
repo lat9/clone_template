@@ -6,11 +6,13 @@
 //
 // Copyright (c) 2016-2023, Vinos de Frutas Tropicales (lat9)
 //
+//namespace Zencart\Plugins\Admin\CloneTemplate;
+
 class cloneTemplate extends base
 {
     protected
         $source_template,
-        $target_templae,
+        $target_template,
         $logfile_name,
         $logs;
 
@@ -84,7 +86,7 @@ class cloneTemplate extends base
     {
         $files = glob($file_path . '{,.}*', GLOB_BRACE + GLOB_MARK);
         foreach ($files as $current_file) {
-            if (substr($current_file, -1) == DIRECTORY_SEPARATOR) {
+            if (substr($current_file, -1) === DIRECTORY_SEPARATOR) {
                 if (!(substr($current_file, -2, 1) === '.' || substr($current_file, -3, 2) === '..')) {
                     $files_array = $this->getDirectoryFilesRecursive($current_file, $files_array);
                     if ($this->target_template === false) {
@@ -102,6 +104,6 @@ class cloneTemplate extends base
     {
         $message .= "\n";
         $this->logs[$message] = $class;
-        error_log(str_replace ('&nbsp;', ' ', $message), 3, $this->logfile_name);
+        error_log(str_replace('&nbsp;', ' ', $message), 3, $this->logfile_name);
     }
 }
