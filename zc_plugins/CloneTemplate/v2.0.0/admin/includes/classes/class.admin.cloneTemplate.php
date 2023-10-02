@@ -6,7 +6,7 @@
 //
 // Copyright (c) 2016-2023, Vinos de Frutas Tropicales (lat9)
 //
-namespace Zencart\Plugins\Admin\CloneTemplate;
+//namespace Zencart\Plugins\Admin\CloneTemplate;
 
 class cloneTemplate extends base
 {

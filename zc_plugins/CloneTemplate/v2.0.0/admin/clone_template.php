@@ -9,12 +9,12 @@
 define('CLONE_TEMPLATE_VERSION', 'v2.0.0');
 
 require 'includes/application_top.php';
-
+/*
 $psr4Autoloader->setClassFile(
     'Zencart\Plugins\Admin\CloneTemplate\cloneTemplate',
     $filePathPluginAdmin['CloneTemplate'] . 'class.admin.cloneTemplate.php'
 );
-
+*/
 $languages = zen_get_languages();
 $default_language_id = 1;
 foreach ($languages as $current_language) {
@@ -130,13 +130,14 @@ function issueRemoveWarnings()
     <div class="row">
 <?php
 $zc_plugins_path = '';
-//$zc_plugins_path = dirname(__FILE__) . DIRECTORY_SEPARATOR;
+$zc_plugins_path = dirname(__FILE__) . DIRECTORY_SEPARATOR;
 if ($action === 'copy_template') {
     $source_template = $_POST['template_source'] . DIRECTORY_SEPARATOR;
     $target_template = $_POST['cloned_name'] . DIRECTORY_SEPARATOR;
 
-//    require $zc_plugins_path . DIR_WS_CLASSES . 'class.admin.cloneTemplate.php';
-    $template_cloner = new Zencart\Plugins\Admin\CloneTemplate\cloneTemplate($source_template, $target_template);
+    require $zc_plugins_path . DIR_WS_CLASSES . 'class.admin.cloneTemplate.php';
+    $template_cloner = new cloneTemplate($source_template, $target_template);
+//    $template_cloner = new Zencart\Plugins\Admin\CloneTemplate\cloneTemplate($source_template, $target_template);
 ?>
         <div class="row text-right">
             <a href="<?php echo zen_href_link(FILENAME_CLONE_TEMPLATE); ?>" class="btn btn-default" role="button">
@@ -223,8 +224,9 @@ if ($action === 'copy_template') {
           WHERE layout_template = '$source_template'"
     );
     $source_template .= DIRECTORY_SEPARATOR;
-//    require $zc_plugins_path . DIR_WS_CLASSES . 'class.admin.cloneTemplate.php';
-    $template_cloner = new Zencart\Plugins\Admin\CloneTemplate\cloneTemplate($source_template);
+    require $zc_plugins_path . DIR_WS_CLASSES . 'class.admin.cloneTemplate.php';
+    $template_cloner = new cloneTemplate($source_template);
+//    $template_cloner = new Zencart\Plugins\Admin\CloneTemplate\cloneTemplate($source_template);
 ?>
         <div class="row">
             <div class="row text-right">
