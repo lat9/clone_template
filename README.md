@@ -1,7 +1,7 @@
 # Clone a Template
 ### Current Version: v2.0.0
 
-### Supported Zen Cart Versions: 1.5.8, 1.5.8a
+### Supported Zen Cart Versions: 1.5.8, 1.5.8a, 2.0.x, 2.1.0
 
 ### Zen Cart Links
 
