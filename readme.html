@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Clone a Template</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="vinos_favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <style>
+.nav-pills-custom .nav-link {
+    color: #aaa;
+    background: #fff;
+    position: relative;
+}
+.nav-pills-custom .nav-link.active {
+    color: #306eff;
+    background: #fff;
+}
+/* Add indicator arrow for the active tab */
+@media (min-width: 992px) {
+    .nav-pills-custom .nav-link::before {
+        content: '';
+        display: block;
+        border-top: 8px solid transparent;
+        border-left: 10px solid #fff;
+        border-bottom: 8px solid transparent;
+        position: absolute;
+        top: 50%;
+        right: -10px;
+        transform: translateY(-50%);
+        opacity: 0;
+    }
+}
+.nav-pills-custom .nav-link.active::before {
+    opacity: 1;
+}
+body {
+    min-height: 100vh;
+    background: radial-gradient(ellipse at center, rgba(240,249,255,1) 0%,rgba(203,235,255,1) 47%,rgba(161,219,255,1) 100%);
+}
+  </style>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+</head>
+<body>
+<section class="py-5 header">
+    <div class="container py-4">
+        <header class="pb-2">
+            <h1 class="display-4 text-center">Clone a Template</h1>
+            <ul>
+                <li>Zen Cart download link: <a href="https://www.zen-cart.com/downloads.php?do=file&id=20870" target="_blank">https://www.zen-cart.com/downloads.php?do=file&id=2087</a></li>
+                <li>Zen Cart support thread: <a href="https://www.zen-cart.com/showthread.php?220458-Clone-a-Template-Support-Thread" target="_blank">https://www.zen-cart.com/showthread.php?220458-Clone-a-Template-Support-Thread</a></li>
+                <li>GitHub repository: <a href="https://github.com/lat9/clone_template" target="_blank">https://github.com/lat9/clone_template</a></li>
+            </ul>
+
+            <h3>Prerequisites</h3>
+            <p>This version of the plugin requires:<ol>
+                <li>A working copy of Zen Cart 1.5.8 or later.</li>
+                <li>The site must use a PHP version greater than or equal to PHP 7.4.</li>
+             </ol>
+        </header>
+
+        <div class="row">
+            <div class="col-md-3">
+                <!-- Tabs nav -->
+                <div class="nav flex-column nav-pills nav-pills-custom" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <a class="nav-link mb-3 p-3 shadow active" id="v-pills-1-tab" data-toggle="pill" href="#v-pills-1" role="tab" aria-controls="v-pills-1" aria-selected="true">
+                        <span class="font-weight-bold small text-uppercase">Overview</span></a>
+                    <a class="nav-link mb-3 p-3 shadow" id="v-pills-2-tab" data-toggle="pill" href="#v-pills-2" role="tab" aria-controls="v-pills-2" aria-selected="false">
+                        <span class="font-weight-bold small text-uppercase">Installation</span></a>
+                    <a class="nav-link mb-3 p-3 shadow" id="v-pills-4-tab" data-toggle="pill" href="#v-pills-4" role="tab" aria-controls="v-pills-4" aria-selected="false">
+                        <span class="font-weight-bold small text-uppercase">Change History</span></a>
+                    <a class="nav-link mb-3 p-3 shadow" id="v-pills-6-tab" data-toggle="pill" href="#v-pills-6" role="tab" aria-controls="v-pills-6" aria-selected="false">
+                        <span class="font-weight-bold small text-uppercase">License</span></a>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <!-- Tabs content -->
+                <div class="tab-content" id="v-pills-tabContent">
+                    <div class="tab-pane fade shadow rounded bg-white show active p-4" id="v-pills-1" role="tabpanel" aria-labelledby="v-pills-1-tab">
+                        <h4 class="font-italic mb-4">Overview</h4>
+                        <p>With the release of Zen Cart 1.5.5a and its built-in responsive template, I found that creating &quot;clones&quot; of that template by hand were getting to be a pain!  Rather than continue with that pain, this plugin came into being!  Once you're copied the plugin's files to your store's file-system and <em>enabled</em> the plugin, you'll find a new admin-menu entry:  <strong>Tools :: Clone a Template</strong></p>
+                        <p><em>Clone a Template</em> enables you to create a copy of any of your store's templates with a single button-click.  The processing copies all template-override files from a <b>source</b> template to a <b>target</b>, copies that source-template's <b>Layout Boxes Controller</b> database settings to the new template and finally updates the target-template's <code class="no-pad">/includes/templates/target_template/template_info.php</code> to identify the source-template's folder-name and the date/time of the cloning operation.</p>
+                        <p>v1.2.0 of <em>Clone a Template</em> introduces the capability to also <code class="no-pad">remove</code> a template's <em>template-override</em> files &hellip; for any add-on or cloned templates in your store.  This action deletes all files and associated directories and removes all <em>Layout Boxes Controller</em> settings from your database.</p>
+                        <p>Starting with v2.0.0, <em>Clone a Template</em> is now a Zen Cart <a href="https://docs.zen-cart.com/dev/plugins/encapsulated_plugins/" target="_blank">encapsulated plugin</a>, supporting Zen Cart 1.5.8 and later.</p>
+                    </div>
+
+                    <div class="tab-pane fade shadow rounded bg-white p-4" id="v-pills-2" role="tabpanel" aria-labelledby="v-pills-2-tab">
+                        <h4 class="font-italic mb-4">Installation</h4>
+                        <p>Follow these steps to install the plugin:</p>
+                        <ol>
+                            <li>Unzip this distribution's zip-file; you'll see a <code>zc_plugins</code> directory, and inside it a <code>CloneTemplate</code> directory, and inside that another directory with a version number.</li>
+                            <li>Copy the plugin's <code>CloneTemplate</code> directory to your site's file-system's <code>zc_plugins</code> directory.</li>
+                            <li>Log into your Zen Cart admin and go to <em>Modules :: Plugin Manager</em>. Click on <code>Clone a Template</code>, and click Install, and confirm by clicking Install.</li>
+                            <li>You'll see a new tool in the admin's menus: <b>Tools :: Clone a Template</b>.</li>
+                        </ol>
+                         <div class="card mt-3">
+                            <div class="card-header text-center bg-secondary text-white">Uninstalling</div>
+                            <div class="card-body">
+                                <p>To uninstall the plugin:</p>
+                                <ol>
+                                    <li>Log into your Zen Cart admin  and navigate to <b>Modules :: Plugin Manager</b>.</li>
+                                    <li>Locate the entry for <b>Clone a Template</b>, click the associated <code>Un-Install</code> button and confirm the removal.</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade shadow rounded bg-white p-4" id="v-pills-4" role="tabpanel" aria-labelledby="v-pills-4-tab">
+                        <h4 class="font-italic mb-4">Change History</h4>
+                        <ul>
+                            <li>v2.0.0, 2023-10-03:<ul>
+                                <li>CHANGE: Converted to an <em>encapsulated plugin</em>, consider all files changed!</li>
+                                <li>INTROP: Declare all class variables, a requirement for PHP 8.2 and later.</li>
+                                <li>CHANGE: Use <var>admin_html_head.php</var> to load common admin files, required for zc158a and later.</li>
+                                <li>BUGFIX: Copy 'extra' <var>template_info.php</var> variables as well.</li>
+                            </ul></li>
+                            <li>v1.2.1, 2019-08-15:<ul>
+                                <li>BUGFIX: Correct overzealous replacement of target template name.</li>
+                                <li>The following files were changed:<ol>
+                                    <li>/YOUR_ADMIN/includes/classes/class.admin.cloneTemplate.php</li>
+                                    <li>/YOUR_ADMIN/includes/languages/english/clone_template.php</li>
+                                </ol></li>
+                            </ul></li>
+                            <li>v1.2.0, 2017-05-31:<ul>
+                                <li>BUGFIX: Remove extraneous &lt;/td&gt;.</li>
+                                <li>CHANGE: Enable a cloned or add-on template's template-override files to be removed.</li>
+                            </ul></li>
+                            <li>v1.1.0, 2016-07-01:<ul>
+                                <li>CHANGE: Update the target-template's &quot;template_info.php&quot; file to enable identification of the newly-cloned template.</li>
+                            </ul></li>
+                            <li>v1.0.0, 2016-06-16:<ul>
+                                <li>Initial release.</li>
+                            </ul></li>
+                        </ul>
+                    </div>
+
+                    <div class="tab-pane fade shadow rounded bg-white p-4" id="v-pills-6" role="tabpanel" aria-labelledby="v-pills-6-tab">
+                        <h4 class="font-italic mb-4">License</h4>
+                        <p><b>Clone a Template</b> is released under the General Public License (see license.txt). This script is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</p>
+                        <p>Always backup your shop and database before making changes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
